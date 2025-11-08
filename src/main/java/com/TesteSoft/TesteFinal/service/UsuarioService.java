@@ -11,12 +11,12 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
-    public UsuarioRepository(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
 
     public Usuario cadastraUsuario(Usuario usuario) {
-        if (UsuarioRepository.existsByEmail(usuario.getEmail())) {
+        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
             throw new EmailAlreadyExistsException(usuario.getEmail());
         }
         return usuarioRepository.save(usuario);

@@ -19,7 +19,7 @@ public class UsuarioController {
     public final UsuarioService usuarioService;
     private final ViaCEPService viaCEPService;
 
-    public u(UsuarioService usuarioService, ViaCEPService viaCEPService) {
+    public UsuarioController(UsuarioService usuarioService, ViaCEPService viaCEPService) {
         this.usuarioService = usuarioService;
         this.viaCEPService = viaCEPService;
     }
@@ -34,7 +34,7 @@ public class UsuarioController {
             usuario.setLocalidade(endereco.getLocalidade());
             usuario.setUf(endereco.getUf());
 
-            usuario novoUsuario = usuarioService.cadastraPessoa(usuario);
+            Usuario novoUsuario = usuarioService.cadastraUsuario(usuario);
             return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
 
         } catch (EmailAlreadyExistsException e) {
@@ -75,8 +75,9 @@ public class UsuarioController {
             }
         }
 
-        usuario UsuarioAtualizada = usuarioService.atualizarUsuario(usuario);
+        Usuario usuarioAtualizado = usuarioService.atualizarUsuario(usuario);
         return ResponseEntity.ok(usuarioAtualizado);
+
     }
 
     @DeleteMapping("/deletar/{id}")
