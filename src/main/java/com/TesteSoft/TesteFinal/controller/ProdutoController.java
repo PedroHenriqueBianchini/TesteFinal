@@ -1,7 +1,9 @@
 package com.TesteSoft.TesteFinal.controller;
 
+import com.TesteSoft.TesteFinal.exception.ProductNotFoundException;
 import com.TesteSoft.TesteFinal.model.Produto;
 import com.TesteSoft.TesteFinal.service.ProdutoService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -26,7 +28,13 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        service.deletar(id);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        try {
+            service.deletar(id);
+            return ResponseEntity.noContent().build();
+        } catch (ProductNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
+

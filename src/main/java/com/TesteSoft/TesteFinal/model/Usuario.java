@@ -25,7 +25,7 @@ public class Usuario {
     @Column(nullable = false)
     private String senha;
 
-    @Column(length = 9, nullable = false)
+    @Column(length = 8, nullable = false)
     private String cep;
 
     @Column

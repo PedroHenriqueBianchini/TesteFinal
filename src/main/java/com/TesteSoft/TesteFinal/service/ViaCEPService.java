@@ -1,6 +1,6 @@
 package com.TesteSoft.TesteFinal.service;
 
-import com.TesteSoft.TesteFinal.model.ViaCEP;
+import com.TesteSoft.TesteFinal.DTO.ViaCEP;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -25,13 +25,24 @@ public class ViaCEPService {
         String url = "https://viacep.com.br/ws/" + cepFormatado + "/json/";
 
         try {
+
             ViaCEP response = restTemplate.getForObject(url, ViaCEP.class);
 
-            if (response != null) {
-                response.setCep(cepFormatado);
+
+            if (response == null) {
+                throw new IllegalArgumentException("Erro ao buscar CEP: resposta inválida");
             }
 
+
+            if (response.getLocalidade() == null) {
+                throw new IllegalArgumentException("CEP não encontrado");
+            }
+
+            response.setCep(cepFormatado);
             return response;
+
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Erro ao buscar CEP na API ViaCEP: " + e.getMessage(), e);
         }
@@ -44,16 +55,22 @@ public class ViaCEPService {
             throw new IllegalArgumentException("CEP inválido: deve conter 8 dígitos");
         }
 
+
         String url = "https://viacep.com.br/ws/" + cepFormatado + "/jso/";
 
         try {
+
             ViaCEP response = restTemplate.getForObject(url, ViaCEP.class);
 
-            if (response != null) {
-                response.setCep(cepFormatado);
+            if (response == null || response.getLocalidade() == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "CEP não encontrado");
             }
 
+            response.setCep(cepFormatado);
             return response;
+
+        } catch (ResponseStatusException e) {
+            throw e;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "CEP não encontrado");
         }

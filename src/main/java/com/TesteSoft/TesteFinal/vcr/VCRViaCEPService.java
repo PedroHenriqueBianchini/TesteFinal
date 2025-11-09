@@ -1,6 +1,6 @@
 package com.TesteSoft.TesteFinal.vcr;
 
-import com.TesteSoft.TesteFinal.model.ViaCEP;
+import com.TesteSoft.TesteFinal.DTO.ViaCEP;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;

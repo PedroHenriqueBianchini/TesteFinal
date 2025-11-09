@@ -1,4 +1,4 @@
-package com.TesteSoft.TesteFinal.model;
+package com.TesteSoft.TesteFinal.DTO;
 
 public class ViaCEP {
     private String cep;
@@ -26,6 +26,7 @@ public class ViaCEP {
 
     public void setLogradouro(String logradouro) {
         this.logradouro = logradouro;
+
     }
 
     public String getComplemento() {
@@ -91,4 +92,6 @@ public class ViaCEP {
     public void setSiafi(String siafi) {
         this.siafi = siafi;
     }
+
+
 }

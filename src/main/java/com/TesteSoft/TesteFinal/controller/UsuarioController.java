@@ -2,7 +2,7 @@ package com.TesteSoft.TesteFinal.controller;
 
 import com.TesteSoft.TesteFinal.exception.EmailAlreadyExistsException;
 import com.TesteSoft.TesteFinal.model.Usuario;
-import com.TesteSoft.TesteFinal.model.ViaCEP;
+import com.TesteSoft.TesteFinal.DTO.ViaCEP;
 import com.TesteSoft.TesteFinal.service.UsuarioService;
 import com.TesteSoft.TesteFinal.service.ViaCEPService;
 import org.springframework.http.HttpStatus;
