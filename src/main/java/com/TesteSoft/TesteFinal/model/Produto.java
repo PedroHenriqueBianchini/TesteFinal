@@ -1,4 +1,5 @@
 package com.TesteSoft.TesteFinal.model;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +13,7 @@ public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nome;
     private Double preco;
 }
