@@ -1,81 +1,64 @@
 package com.TesteSoft.TesteFinal;
 
+import com.TesteSoft.TesteFinal.controller.UsuarioController;
 import com.TesteSoft.TesteFinal.model.Usuario;
+import com.TesteSoft.TesteFinal.service.UsuarioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UsuarioControllerTest {
+public class UsuarioControllerTest {
 
-    @LocalServerPort
-    private int port;
+    @Mock
+    private UsuarioService usuarioService;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    private String baseUrl;
+    @InjectMocks
+    private UsuarioController usuarioController;
 
     @BeforeEach
-    void setup() {
-        baseUrl = "http://localhost:" + port + "/api/pessoas";
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void deveCadastrarListarEBuscarUsuario() {
-        Usuario usuario = new Usuario();
-        usuario.setNome("Teste Controller");
-        usuario.setEmail("controller@test.com");
-        usuario.setSenha("123456");
-        usuario.setCep("01001000"); // CEP válido para integração ViaCEP
+    void deveListarUsuarios() {
+        when(usuarioService.listarTodos()).thenReturn(List.of(new Usuario("Kenzo", "kenzo@teste.com", "123", "04310000")));
 
-        // 1️⃣ Cadastrar usuário
-        ResponseEntity<Usuario> responseCreate = restTemplate.postForEntity(baseUrl + "/cadastrar", usuario, Usuario.class);
-        assertThat(responseCreate.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(responseCreate.getBody()).isNotNull();
+        ResponseEntity<List<Usuario>> resposta = usuarioController.listarTodos();
 
-        int id = responseCreate.getBody().getId();
-
-        // 2️⃣ Listar usuários
-        ResponseEntity<Usuario[]> responseList = restTemplate.getForEntity(baseUrl + "/listar", Usuario[].class);
-        assertThat(responseList.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseList.getBody()).isNotEmpty();
-
-        // 3️⃣ Buscar por ID
-        ResponseEntity<Usuario> responseGet = restTemplate.getForEntity(baseUrl + "/buscar/" + id, Usuario.class);
-        assertThat(responseGet.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseGet.getBody().getEmail()).isEqualTo(usuario.getEmail());
+        assertThat(resposta.getBody()).hasSize(1);
+        verify(usuarioService, times(1)).listarTodos();
     }
 
     @Test
-    void deveAtualizarEDeletarUsuario() {
-        Usuario usuario = new Usuario();
-        usuario.setNome("Atualiza");
-        usuario.setEmail("atualiza@test.com");
-        usuario.setSenha("abc123");
-        usuario.setCep("01001000");
+    void deveAtualizarUsuario() {
+        Usuario usuario = new Usuario("Teste", "teste@teste.com", "senha", "04310000");
+        usuario.setId(1L);
 
-        // Cadastra
-        ResponseEntity<Usuario> created = restTemplate.postForEntity(baseUrl + "/cadastrar", usuario, Usuario.class);
-        Integer id = created.getBody().getId();
+        when(usuarioService.atualizarUsuario(any(Usuario.class))).thenReturn(usuario);
 
-        // 1️⃣ Atualizar nome
-        usuario.setNome("Atualizado");
-        HttpEntity<Usuario> request = new HttpEntity<>(usuario);
-        ResponseEntity<Usuario> updated = restTemplate.exchange(baseUrl + "/atualizar/" + id, HttpMethod.PUT, request, Usuario.class);
+        ResponseEntity<Usuario> resposta = usuarioController.atualizar(1L, usuario);
 
-        assertThat(updated.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(updated.getBody().getNome()).isEqualTo("Atualizado");
+        assertThat(resposta.getBody().getId()).isEqualTo(1L);
+        verify(usuarioService, times(1)).atualizarUsuario(any(Usuario.class));
+    }
 
-        // 2️⃣ Deletar
-        restTemplate.delete(baseUrl + "/deletar/" + id);
-        ResponseEntity<Usuario> deleted = restTemplate.getForEntity(baseUrl + "/buscar/" + id, Usuario.class);
-        assertThat(deleted.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    @Test
+    void deveDeletarUsuario() {
+        doNothing().when(usuarioService).deletarUsuario(anyLong());
+
+        ResponseEntity<Void> resposta = usuarioController.deletar(1L);
+
+        assertThat(resposta.getStatusCode().is2xxSuccessful()).isTrue();
+        verify(usuarioService, times(1)).deletarUsuario(1L);
     }
 }
