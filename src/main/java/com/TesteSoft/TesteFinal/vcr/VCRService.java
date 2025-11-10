@@ -1,17 +1,14 @@
 package com.TesteSoft.TesteFinal.vcr;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Component
@@ -62,5 +59,21 @@ public class VCRService {
         return recording.getInteractions().stream()
                 .filter(interaction -> interaction.getUrl().equals(url) && interaction.getMethod().equals(method))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Exclui um cassete existente, se ele estiver salvo localmente.
+     * Evita conflito entre gravações antigas e novas.
+     */
+    public void deleteCassetteIfExists(String cassetteName) {
+        String fileName = cassetteName + ".json";
+        Path filePath = Paths.get(CASSETTE_DIR).resolve(fileName);
+
+        try {
+            Files.deleteIfExists(filePath);
+            System.out.println("Cassete antigo removido: " + filePath);
+        } catch (IOException e) {
+            System.err.println("Erro ao excluir cassete: " + e.getMessage());
+        }
     }
 }
