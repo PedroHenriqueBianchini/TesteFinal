@@ -1,0 +1,208 @@
+Cadastro de Usuários e Produtos
+
+Autores
+
+Matheus Souza da Silva
+Pedro Henrique Bianchinni Garrido
+Theo Gian Bezerra
+
+1. Descrição do Projeto
+
+Este projeto consiste em uma aplicação Spring Boot desenvolvida em Java 21, com o objetivo de implementar uma API RESTful para o cadastro e gerenciamento de usuários e produtos, incluindo integração externa com a API ViaCEP para validação de CEPs.
+O projeto utiliza PostgreSQL em ambiente de produção e H2 em modo de desenvolvimento, além de conter testes automatizados de unidade e integração com JUnit 5 e Testcontainers.
+
+2. Tecnologias Utilizadas
+
+Java 21
+
+Spring Boot 3.x
+
+Spring Data JPA
+
+PostgreSQL
+
+H2 Database (modo dev)
+
+JUnit 5
+
+Testcontainers
+
+VCR (gravação e reprodução de chamadas HTTP ViaCEP)
+
+GitHub Actions (CI/CD)
+
+Maven
+
+3. Estrutura de Pacotes
+com.TesteSoft.TesteFinal
+├── controller
+│   ├── UsuarioController.java
+│   └── ProdutoController.java
+├── dto
+├── exception
+│   ├── EmailAlreadyExistsException.java
+│   └── ProductNotFoundException.java
+├── model
+│   ├── Usuario.java
+│   ├── Produto.java
+│   └── ViaCEP.java
+├── repository
+│   ├── UsuarioRepository.java
+│   └── ProdutoRepository.java
+├── service
+│   ├── UsuarioService.java
+│   ├── ProdutoService.java
+│   └── ViaCEPService.java
+└── vcr
+    ├── VCRService.java
+    ├── VCRViaCEPService.java
+    ├── VCRRecording.java
+    ├── VCRReplayResponse.java
+    ├── VCRClientHttpResponse.java
+    ├── VCRInterceptor.java
+    └── VCRInteraction.java
+
+4. Requisitos Atendidos
+
+4.1 Requisitos Funcionais
+Requisito	Status
+Cadastro de usuários	                            Concluído
+Cadastro de produtos	                            Concluído
+CRUD completo (Create, Read, Update, Delete)	    Concluído
+Persistência em banco PostgreSQL	                Concluído
+Integração com API externa ViaCEP	                Concluído
+Testes automatizados (unitários e de integração)	Concluído
+
+4.2 Requisitos Não Funcionais
+
+Requisito	                                        Status
+Java 21 + Spring Boot 3 + JPA	                    Concluído
+Banco de dados PostgreSQL com Testcontainers	    Concluído
+Testes automatizados (JUnit 5)	                    Concluído
+CI no GitHub Actions com build, test e cobertura	Concluído
+Execução local com H2	                            Concluído
+Documentação técnica e UML	                        Concluída
+
+5. Configuração do Ambiente
+
+5.1 Aplicação Local (H2)
+
+Arquivo application.properties:
+
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=sa
+
+spring.jpa.hibernate.ddl-auto=update
+spring.h2.console.enabled=true
+spring.h2.console.settings.web-allow-others=true
+spring.profiles.active=dev
+
+5.2 Ambiente de Teste (PostgreSQL - Testcontainers)
+
+Arquivo application-test.properties:
+
+spring.datasource.url=jdbc:tc:postgresql:16-alpine:///testdb
+spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver
+spring.datasource.username=user
+spring.datasource.password=pass
+spring.jpa.hibernate.ddl-auto=update
+
+6. Execução do Projeto
+
+6.1 Rodar Localmente (H2)
+mvn spring-boot:run
+
+A aplicação será iniciada em:
+
+http://localhost:8080
+
+6.2 Rodar Testes Automatizados
+mvn clean verify
+
+
+Executa todos os testes unitários e de integração, utilizando Testcontainers e gerando relatórios do JaCoCo em:
+
+target/site/jacoco/index.html
+
+7. Integração Contínua (GitHub Actions)
+
+Arquivo .github/workflows/maven.yml:
+
+Executa build com JDK 21
+
+Inicializa PostgreSQL com Docker
+
+Executa mvn clean verify
+
+Publica relatórios do Surefire e JaCoCo como artefatos
+
+8. Testes Manuais da API
+
+Para realizar testes manuais, foi criado o arquivo api.http (usado no IntelliJ HTTP Client).
+As requisições cobrem todos os endpoints de usuários e produtos.
+
+Exemplo de criação de usuário:
+
+POST http://localhost:8080/usuarios
+Content-Type: application/json
+
+{
+  "nome": "Matheus Souza",
+  "email": "matheus@teste.com",
+  "senha": "12345",
+  "cep": "04310000"
+}
+
+
+Exemplo de listagem de produtos:
+
+GET http://localhost:8080/produtos
+
+
+Caso esteja utilizando outra ferramenta, como Postman, importe os mesmos endpoints manualmente.
+
+9. Testes Automatizados
+
+Os testes implementados incluem:
+
+UsuarioServiceIntegrationTest – CRUD completo com PostgreSQL via Testcontainers
+
+ProdutoRepositoryTest – Persistência e mapeamento JPA
+
+ViaCEPServiceRecordTest – Gravação real das requisições HTTP (VCR)
+
+ViaCEPServiceReplayTest – Reprodução de chamadas gravadas (mockadas)
+
+UsuarioControllerTest – Teste de integração de camada REST
+
+Todos executam de forma automatizada com:
+
+mvn test
+
+10. Diagrama UML
+
+O diagrama de classes representa a estrutura e relações entre os principais componentes do sistema.
+
+IdeaProjects\TesteFinal\diagramaUML.png
+
+11. Commits Recentes
+
+Commit	Descrição
+feat: criar estrutura inicial do projeto Spring Boot	Criação do projeto base
+feat: adicionar entidades Usuario e Produto	Criação dos modelos principais
+feat: implementar controllers e serviços CRUD	Criação dos endpoints e lógica de negócio
+test: adicionar testes de integração com Testcontainers	Testes com PostgreSQL real
+chore(ci): configurar GitHub Actions com Maven e PostgreSQL	Configuração de pipeline
+docs(api): adicionar arquivo api.http com exemplos de requisições para testes manuais	Criação do arquivo de testes manuais
+
+12. Status Final
+
+Categoria	Status
+
+Funcionalidades principais	    Concluídas
+Testes automatizados	        Concluídos
+Integração ViaCEP (VCR)	        Concluída
+CI/CD	                        Concluído
+Documentação (README e UML)	Em  Concluída
