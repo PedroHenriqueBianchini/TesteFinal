@@ -1,5 +1,8 @@
 package com.TesteSoft.TesteFinal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ViaCEP {
     private String cep;
     private String logradouro;
@@ -12,6 +15,7 @@ public class ViaCEP {
     private String ddd;
     private String siafi;
 
+    // Getters e Setters
     public String getCep() {
         return cep;
     }
@@ -90,21 +94,5 @@ public class ViaCEP {
 
     public void setSiafi(String siafi) {
         this.siafi = siafi;
-    }
-
-    @Override
-    public String toString() {
-        return "ViaCEP{" +
-                "cep='" + cep + '\'' +
-                ", logradouro='" + logradouro + '\'' +
-                ", complemento='" + complemento + '\'' +
-                ", bairro='" + bairro + '\'' +
-                ", localidade='" + localidade + '\'' +
-                ", uf='" + uf + '\'' +
-                ", ibge='" + ibge + '\'' +
-                ", gia='" + gia + '\'' +
-                ", ddd='" + ddd + '\'' +
-                ", siafi='" + siafi + '\'' +
-                '}';
     }
 }
