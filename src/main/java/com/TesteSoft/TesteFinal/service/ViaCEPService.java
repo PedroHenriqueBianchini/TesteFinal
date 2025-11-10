@@ -1,61 +1,30 @@
 package com.TesteSoft.TesteFinal.service;
 
 import com.TesteSoft.TesteFinal.model.ViaCEP;
-import org.springframework.http.HttpStatus;
+import com.TesteSoft.TesteFinal.vcr.VCRViaCEPService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class ViaCEPService {
 
-    private final RestTemplate restTemplate;
+    private final VCRViaCEPService vcrViaCEPService;
 
-    public ViaCEPService() {
-        this.restTemplate = new RestTemplate();
+    public ViaCEPService(VCRViaCEPService vcrViaCEPService) {
+        this.vcrViaCEPService = vcrViaCEPService;
     }
 
     public ViaCEP buscarEnderecoPorCEP(String cep) {
-        String cepFormatado = cep.replaceAll("[^0-9]", "");
+        String cassetteName = "via_cep_cassette";
 
-        if (cepFormatado.length() != 8) {
-            throw new IllegalArgumentException("CEP inválido: deve conter 8 dígitos");
-        }
+        boolean recordMode = false;
 
-        String url = "https://viacep.com.br/ws/" + cepFormatado + "/json/";
-
-        try {
-            ViaCEP response = restTemplate.getForObject(url, ViaCEP.class);
-
-            if (response != null) {
-                response.setCep(cepFormatado);
-            }
-
-            return response;
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar CEP na API ViaCEP: " + e.getMessage(), e);
-        }
+        return vcrViaCEPService.buscarEnderecoPorCEP(cep, cassetteName, recordMode);
     }
 
-    public ViaCEP viaCEPResponseError404(String cep) {
-        String cepFormatado = cep.replaceAll("[^0-9]", "");
+    public ViaCEP buscarEnderecoPorCEPGravar(String cep) {
+        String cassetteName = "via_cep_cassette";
+        boolean recordMode = true;
 
-        if (cepFormatado.length() != 8) {
-            throw new IllegalArgumentException("CEP inválido: deve conter 8 dígitos");
-        }
-
-        String url = "https://viacep.com.br/ws/" + cepFormatado + "/jso/";
-
-        try {
-            ViaCEP response = restTemplate.getForObject(url, ViaCEP.class);
-
-            if (response != null) {
-                response.setCep(cepFormatado);
-            }
-
-            return response;
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "CEP não encontrado");
-        }
+        return vcrViaCEPService.buscarEnderecoPorCEP(cep, cassetteName, recordMode);
     }
 }
