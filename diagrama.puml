@@ -1,0 +1,130 @@
+@startuml
+title Diagrama de Classes - Cadastro de Usuários e Produtos
+
+' === Pacote Model ===
+package "model" {
+    class Usuario {
+        - Long id
+        - String nome
+        - String email
+        - String senha
+        - String cep
+    }
+
+    class Produto {
+        - Long id
+        - String nome
+        - Double preco
+        - String descricao
+    }
+
+    class ViaCEP {
+        - String cep
+        - String logradouro
+        - String bairro
+        - String localidade
+        - String uf
+    }
+}
+
+' === Pacote Repository ===
+package "repository" {
+    interface UsuarioRepository {
+        + Optional<Usuario> findByEmail(String email)
+        + List<Usuario> findAll()
+        + Usuario save(Usuario usuario)
+        + void deleteById(Long id)
+    }
+
+    interface ProdutoRepository {
+        + List<Produto> findAll()
+        + Produto save(Produto produto)
+        + void deleteById(Long id)
+    }
+}
+
+' === Pacote Service ===
+package "service" {
+    class UsuarioService {
+        - UsuarioRepository usuarioRepository
+        - ViaCEPService viaCEPService
+        + Usuario cadastraUsuario(Usuario usuario)
+        + List<Usuario> listarUsuarios()
+        + Optional<Usuario> buscarPorId(Long id)
+        + Usuario atualizarUsuario(Usuario usuario)
+        + void deletarUsuario(Long id)
+    }
+
+    class ProdutoService {
+        - ProdutoRepository produtoRepository
+        + Produto salvar(Produto produto)
+        + List<Produto> listar()
+        + void deletar(Long id)
+    }
+
+    class ViaCEPService {
+        + ViaCEP buscarCEP(String cep)
+    }
+}
+
+' === Pacote Controller ===
+package "controller" {
+    class UsuarioController {
+        - UsuarioService usuarioService
+        + ResponseEntity<List<Usuario>> listarUsuarios()
+        + ResponseEntity<Usuario> cadastrarUsuario(Usuario usuario)
+        + ResponseEntity<Usuario> atualizarUsuario(Long id, Usuario usuario)
+        + ResponseEntity<Void> deletarUsuario(Long id)
+    }
+
+    class ProdutoController {
+        - ProdutoService produtoService
+        + ResponseEntity<List<Produto>> listarProdutos()
+        + ResponseEntity<Produto> cadastrarProduto(Produto produto)
+        + ResponseEntity<Produto> atualizarProduto(Long id, Produto produto)
+        + ResponseEntity<Void> deletarProduto(Long id)
+    }
+}
+
+' === Pacote Exception ===
+package "exception" {
+    class EmailAlreadyExistsException {
+        + EmailAlreadyExistsException(String message)
+    }
+
+    class ProductNotFoundException {
+        + ProductNotFoundException(String message)
+    }
+}
+
+' === Pacote VCR ===
+package "vcr" {
+    class VCRViaCEPService {
+        - VCRService vcrService
+        + ViaCEP buscarCEP(String cep)
+    }
+
+    class VCRService {
+        + gravarRequisicao(String url, String response)
+        + reproduzirRequisicao(String url): String
+    }
+}
+
+' === Relacionamentos ===
+UsuarioController --> UsuarioService
+ProdutoController --> ProdutoService
+
+UsuarioService --> UsuarioRepository
+UsuarioService --> ViaCEPService
+ProdutoService --> ProdutoRepository
+ViaCEPService --> ViaCEP
+
+VCRViaCEPService --> VCRService
+Usuario --> ViaCEP
+ProdutoRepository --> Produto
+UsuarioRepository --> Usuario
+
+EmailAlreadyExistsException <|-- Exception
+ProductNotFoundException <|-- Exception
+
+@enduml
