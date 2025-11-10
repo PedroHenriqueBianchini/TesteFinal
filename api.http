@@ -1,0 +1,77 @@
+### Cadastrar novo usuário
+POST http://localhost:8080/usuarios
+Content-Type: application/json
+
+{
+  "nome": "Matheus Souza da Silva",
+  "email": "matheus@teste.com",
+  "senha": "12345",
+  "cep": "04310000"
+}
+
+###
+
+### Listar todos os usuários
+GET http://localhost:8080/usuarios
+
+###
+
+### Buscar usuário por ID
+GET http://localhost:8080/usuarios/1
+
+###
+
+### Atualizar usuário existente
+PUT http://localhost:8080/usuarios
+Content-Type: application/json
+
+{
+  "id": 1,
+  "nome": "Matheus Souza da Silva (Atualizado)",
+  "email": "matheus@teste.com",
+  "senha": "novaSenha123",
+  "cep": "01001000"
+}
+
+###
+
+### Deletar usuário por ID
+DELETE http://localhost:8080/usuarios/1
+
+###  Cadastrar novo produto
+POST http://localhost:8080/produtos
+Content-Type: application/json
+
+{
+  "nome": "Coca-Cola 2L",
+  "preco": 9.99,
+  "descricao": "Refrigerante tradicional 2 litros"
+}
+
+###
+
+### Listar todos os produtos
+GET http://localhost:8080/produtos
+
+###
+
+### Buscar produto por ID
+GET http://localhost:8080/produtos/1
+
+###
+
+### Atualizar produto existente
+PUT http://localhost:8080/produtos
+Content-Type: application/json
+
+{
+  "id": 1,
+  "nome": "Coca-Cola Zero 2L",
+  "preco": 10.49,
+  "descricao": "Refrigerante zero açúcar 2 litros"
+}
+
+###
+
+### Deletar produto por ID
+DELETE http://localhost:8080/produtos/1
