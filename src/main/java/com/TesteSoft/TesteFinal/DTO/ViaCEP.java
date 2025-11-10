@@ -1,42 +1,17 @@
 package com.TesteSoft.TesteFinal.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ViaCEP {
-
-    @JsonProperty("cep")
     private String cep;
-
-    @JsonProperty("logradouro")
     private String logradouro;
-
-    @JsonProperty("complemento")
     private String complemento;
-
-    @JsonProperty("bairro")
     private String bairro;
-
-    @JsonProperty("localidade")
     private String localidade;
-
-    @JsonProperty("uf")
     private String uf;
-
-    @JsonProperty("ibge")
     private String ibge;
-
-    @JsonProperty("gia")
     private String gia;
-
-    @JsonProperty("ddd")
     private String ddd;
-
-    @JsonProperty("siafi")
     private String siafi;
 
-    // Getters e Setters
     public String getCep() {
         return cep;
     }
