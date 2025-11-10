@@ -16,18 +16,22 @@ public class ViaCEPServiceRecordTest {
     @Test
     void deveGravarCasseteComRespostaReal() {
 
-        String cep = "01001000";
-
+        String cep = "01001000"; // CEP da Praça da Sé
         String cassetteName = "via_cep_cassette";
 
         ViaCEP resposta = vcrViaCEPService.buscarEnderecoPorCEP(cep, cassetteName, true);
 
-        Assertions.assertNotNull(resposta);
+        Assertions.assertNotNull(resposta, "A resposta não deve ser nula");
         Assertions.assertEquals("01001000", resposta.getCep());
         Assertions.assertNotNull(resposta.getLogradouro());
         Assertions.assertNotNull(resposta.getLocalidade());
         Assertions.assertNotNull(resposta.getUf());
 
-        System.out.println("Cassete gravado com sucesso em src/test/resources/vcr_cassettes/");
+        System.out.println("\n Cassete gravado com sucesso em src/test/resources/vcr_cassettes/");
+        System.out.println("CEP: " + resposta.getCep());
+        System.out.println("Logradouro: " + resposta.getLogradouro());
+        System.out.println("Bairro: " + resposta.getBairro());
+        System.out.println("Cidade: " + resposta.getLocalidade());
+        System.out.println("UF: " + resposta.getUf());
     }
 }
