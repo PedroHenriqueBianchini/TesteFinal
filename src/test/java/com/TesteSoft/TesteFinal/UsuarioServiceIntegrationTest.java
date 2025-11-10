@@ -49,18 +49,18 @@ public class UsuarioServiceIntegrationTest {
 
     @Test
     void deveCadastrarUsuarioComSucesso() {
-        Usuario usuario = new Usuario("Kenzo", "kenzo@teste.com", "1234", "04310000");
+        Usuario usuario = new Usuario("Pedro", "pedro@teste.com", "1234", "04310000");
 
         Usuario salvo = usuarioService.cadastraUsuario(usuario);
 
         assertThat(salvo.getId()).isNotNull();
-        assertThat(salvo.getEmail()).isEqualTo("kenzo@teste.com");
+        assertThat(salvo.getEmail()).isEqualTo("pedro@teste.com");
     }
 
     @Test
     void deveLancarErroAoCadastrarEmailDuplicado() {
-        Usuario usuario1 = new Usuario("Kenzo", "kenzo@teste.com", "1234", "04310000");
-        Usuario usuario2 = new Usuario("Outro", "kenzo@teste.com", "abcd", "04310000");
+        Usuario usuario1 = new Usuario("Pedro", "pedro@teste.com", "1234", "04310000");
+        Usuario usuario2 = new Usuario("Outro", "pedro@teste.com", "abcd", "04310000");
 
         usuarioService.cadastraUsuario(usuario1);
 
