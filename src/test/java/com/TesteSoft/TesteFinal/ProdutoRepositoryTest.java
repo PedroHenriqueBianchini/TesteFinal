@@ -26,7 +26,7 @@ public class ProdutoRepositoryTest {
 
     @Test
     void deveSalvarProdutoNoBancoReal() {
-        Produto produto = new Produto(null, "Teclado", 120.0);
+        Produto produto = new Produto(null, "Teclado", 120.0, "Periférico USB padrão ABNT2");
         Produto salvo = repository.save(produto);
 
         assertThat(salvo.getId()).isNotNull();
